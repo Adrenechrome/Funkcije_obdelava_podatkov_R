@@ -1,0 +1,7 @@
+library(testit) #za samo base odstrani line 2 (assert)
+
+recod.likert<-function(x){ #ohrani zaporedje
+  assert("Vzame samo numericne vektorje in faktorje - ce imas string stevilske vektorje ga najprej as.numeric()", is.numeric(x)|is.factor(x)==TRUE)
+  x<-factor(x)
+  levels(x)<-paste0("", seq(1:nlevels(x)))
+  x<-as.numeric(as.character(x))}
