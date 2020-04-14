@@ -25,4 +25,5 @@ recod.likert <- function(x, inv=FALSE){
     x<-factor(x)
     levels(x)<-paste0("", sort(seq(1:nlevels(x)), decreasing = TRUE))
     x<-as.numeric(as.character(x))}
+    }
     
