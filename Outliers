@@ -2,6 +2,11 @@
 ###################################### tole je samo za prepoznavanje ###############################################
 boxplot(x)$out
 
+#al pa da pogledas na boxplotu
+for (i in c(1,4:8)) {
+  boxplot(dat[,i])
+}
+
 # ################################### tale ti jih takoj odstrani #################################################
 ods.out <- function(x, data){
   x <- data[,deparse(substitute(x))]
