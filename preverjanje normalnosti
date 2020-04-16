@@ -1,0 +1,48 @@
+test<-TukeyHSD(anova1)
+interaction.plot(datC$sola.f, datC$LD.f3, datC$DzS)
+test$`LD.f3:sola.f`[(test$`LD.f3:sola.f`[,4]<0.05),]
+test2<-data.frame(test$`LD.f3:sola.f:star.f`[(test$`LD.f3:sola.f:star.f`[,4]<0.05),])
+test2<-na.omit(test2)
+test2[,c(1,4)]
+
+install.packages("rcompanion")
+library(rcompanion)
+plotNormalHistogram(datC$DzS)
+
+DzS_log <- log(datC$DzS)
+plotNormalHistogram(DzS_log)
+
+DzS_tuk =
+  transformTukey(datC$DzS,
+                 plotit=FALSE)
+plotNormalHistogram(DzS_tuk)
+
+qqnorm(datC$DzS)
+qqline(datC$DzS, col="red")
+
+zadov <- cbind(datC$DzS + datC$DzK + datC$DzG)
+str(zadov)
+opis(zadov, hist = TRUE)
+shapiro.test(zadov)
+plotNormalHistogram(zadov)
+zad_t<-transformTukey(zadov, plotit = FALSE)
+plotNormalHistogram(zad_t)
+
+an.t<-aov(datC$DzS~datC$LD.f3*datC$sola.f*datC$star.f)
+summary(an.t)
+leveneTest(an.t)
+res<-resid(an.t)
+shapiro.test(res)
+
+DzG_l <- transformTukey(datC$DzG)
+opis(DzG_l)
+
+by(datC[,c(3,6)], datC$LD.f3, summary)
+
+povezava(sola.f, LD.f3, data=datC)
+
+table(datC$sola.f, dat$LD.f3)
+
+plot(anova1,2)
+anova1.residuals <- residuals(object = anova1)
+shapiro.test(x = anova1.residuals ) #p mora bit večji, vendar je anova robustna, tako, da ni večje panike
