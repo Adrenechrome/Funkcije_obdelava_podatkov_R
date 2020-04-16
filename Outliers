@@ -1,8 +1,16 @@
 
-#tole je samo za prepoznavanje
+###################################### tole je samo za prepoznavanje ###############################################
 boxplot(x)$out
 
-#Super funkcija, preveri in da rezultate in vprasa, ce bi jih zamenu z NA
+# ################################### tale ti jih takoj odstrani #################################################
+ods.out <- function(x, data){
+  x <- data[,deparse(substitute(x))]
+  kvant <- quantile(x, probs=c(.25, .75), na.rm = FALSE)
+  iqr <- IQR(x)
+  data <- subset(data, x > (kvant[1] - 1.5*iqr) & x < (kvant[2]+1.5*iqr))}
+datC<-ods.out(sola, datC)
+
+###################### Super funkcija, preveri in da rezultate in vprasa, ce bi jih zamenu z NA ############################3
 
 outlierKD <- function(dt, var) {
   var_name <- eval(substitute(var),eval(dt))
