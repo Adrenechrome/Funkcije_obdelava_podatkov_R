@@ -7,6 +7,13 @@ for (i in c(1,4:8)) {
   boxplot(dat[,i])
 }
 
+######################################## tudi prepoznavanje ######################################################
+library(rstatix)
+
+dat %>% #dataset
+  group_by(x,y,z) %>% #ce hocs po skupinah
+  identify_outliers(DzS) #numericna spremenljivka
+
 # ################################### tale ti jih takoj odstrani #################################################
 ods.out <- function(x, data){
   x <- data[,deparse(substitute(x))]
