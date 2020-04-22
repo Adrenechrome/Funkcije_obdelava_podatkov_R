@@ -1,13 +1,14 @@
 ################################################## ŠTEVILO CLUSTERJEV ###################################################
 
 ############# HITREJSA
-st.clusterjev <- function(data){
-  vs.kvad.zn <- (nrow(data))*sum(apply(data,2,var))
-  for (i in 1:ncol(data)) vs.kvad.zn[i] <- sum(kmeans(data, centers=i)$withinss)
-  plot(1:ncol(data), vs.kvad.zn, type="b", xlab="Stevilo clusterjev", ylab="vsota kvadratov znotraj skupin")
+st.clusterjev <- function(data, max=ncol(data)){
+  vs.kvad <- (nrow(data))*sum(apply(data,2,var)) #vsota vseh kvadratov
+  for (i in 1:max) vs.kvad[i] <- sum(kmeans(data, centers=i)$withinss) #vsote kvadratov znotraj
+  plot(1:max, vs.kvad, type="b", xlab="Stevilo clusterjev", ylab="vsota kvadratov znotraj skupin")
 }
 
 ############ POCASNEJSA
 st.clusterjev2 <- function(data, max=ncol(data)){
   wss <- sapply(1:max, function(k){kmeans(data, k, nstart=50,iter.max = 15 )$tot.withinss})
 plot(1:max, wss, type="b", pch = 19, xlab="Number of clusters K", ylab="Total within-clusters sum of squares")}
+
