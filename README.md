@@ -13,3 +13,9 @@ RECOD.LIKERT
   Združeni obe
 
 PREPROSTE OPISNE
+  
+LINEAR DISCRIMINANT ANALISYS
+  * moja.lda
+  Razdeli podatke, izvede LDA, poda tocnost, poda confusion matrix
+  * moja.lda2
+  Izvede LDA, poda tocnost, poda confusion matrix
