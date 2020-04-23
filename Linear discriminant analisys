@@ -1,0 +1,59 @@
+# Trening in test vzorca
+
+velikost.vzorca <- floor(0.75 * nrow(dat.lda)) #število 75% vseh enot
+set.seed(123) #seed za sample, da bo izbiral iste vrste
+trening.ID <- sample(seq_len(nrow(dat.lda)), size = velikost.vzorca) #izberem enote za trening
+
+dat.tren <- dat.lda[trening.ID, ]
+dat.test <- dat.lda[-trening.ID, ]
+
+#Preverjanje
+
+moja.lda <- function(podatki, skupine, tocnost=TRUE, CM=TRUE){
+  # Sprinta točnost predvidanja in confusion matrix po analizi linearnih diskriminant
+  # Sama razdeli v test in trening vzorce
+  # Argumenta sta podatki (dataframe) in spremenljivka s skupinami, po katerih ocenjujemo (mora bit v dataframu)
+  # Dodatna (opcijska) argumenta sta, kaj naj vrne (tocnost ali confusion matrix)
+  require(MASS)
+  # izdelava test in trening setov
+  velikost.vzorca <- floor(0.75 * nrow(podatki))
+  set.seed(123)
+  trening.ID <- sample(seq_len(nrow(podatki)), size = velikost.vzorca)
+  trening <- data.frame(podatki[trening.ID, ])
+  test <- data.frame(podatki[-trening.ID, ])
+  # urejanje objektov s kakerimi operirajo funkcije naprej
+  ime <- deparse(substitute(skupine))
+  data.tren <- trening[,!(names(trening) %in% ime)]
+  data.test <- test[,!(names(test) %in% ime)] 
+  Rtrening <- trening[,ime] 
+  Rtest <- test[,ime]
+  # model, predikcije, primerjava testa in treninga in confusion matrix
+  model <- lda(Rtrening~., data=data.tren)
+  predikcije <- predict(model, newdata = data.test)
+  cat("\nPo skupinah", ime, "\n")
+  if(tocnost){cat("\nNatancnost modela:", mean(predikcije$class==Rtest), "\n")}
+  if(CM){cat("\nConfusion matrika:\n")
+    CM <- confusionMatrix(predikcije$class, Rtest)
+    CM$table}
+}
+
+moja.lda(dat.lda[,1:17], LD)
+moja.lda(dat.lda[,c(1:16,18)], cluster.vsi)
+moja.lda(dat.lda[,c(1:16,19)], cluster.pca, CM=FALSE)
+moja.lda(dat.lda[,c(1:16,20)], cluster.h3)
+moja.lda(dat.lda[,c(1:16,21)], cluster.h5)
+
+moja.lda2 <- function(trening, test, st.skupine, tocnost=TRUE, CM=TRUE){
+  # Sprinta točnost predvidanja in confusion matrix po analizi linearnih diskriminant
+  # Argumenti so trening set, test set in stevilka stolpca s spremenljivko, po kateri ocenjujemo
+  # Sprinta točnost predvidanja in confusion matrix po analizi linearnih diskriminant
+  require(MASS)
+  data.tren <- trening[ , -st.skupine]; data.test <- test[ , -st.skupine]; Rtrening <- trening[, st.skupine]; Rtest <- test[,st.skupine]
+  model <- lda(Rtrening~., data=data.tren)
+  predikcije <- predict(model, newdata = data.test)
+  cat("\nPo skupinah", colnames(trening[st.skupine]), "\n")
+  if(tocnost){cat("\nNatancnost modela:", mean(predikcije$class==Rtest), "\n")}
+  if(CM){cat("\nConfusion matrika:\n")
+  CM <- confusionMatrix(predikcije$class, Rtest)
+  CM$table}
+}
