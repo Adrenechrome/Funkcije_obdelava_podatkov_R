@@ -10,12 +10,13 @@ RECOD.LIKERT
   Pretvori v numericni vektor in zamenja vrstni red  
   
   * reod.likert(x, inv)  
-  Združeni obe
+  Združeni obe 
 
 PREPROSTE OPISNE
   
 LINEAR DISCRIMINANT ANALISYS
-  * moja.lda
-  Razdeli podatke, izvede LDA, poda tocnost, poda confusion matrix
-  * moja.lda2
-  Izvede LDA, poda tocnost, poda confusion matrix
+  * moja.lda  
+  Razdeli podatke, izvede LDA, poda tocnost, poda confusion matrix  
+  
+  * moja.lda2   
+  Izvede LDA, poda tocnost, poda confusion matrix 
