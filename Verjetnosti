@@ -1,0 +1,37 @@
+##################################################### VERJETNOST IN ODDS ####################################################################
+
+######################### Izpise posamezne #############################
+
+moja.verjetnost <- function(value, all=NULL, data=NULL, row=NULL, prob=TRUE, odds=TRUE){
+  if(is.null(data)==FALSE){
+    value <- data[row, value]
+    if(is.null(all)){
+      all<-sum(data[row,])}
+    else all <- data[row,all]}
+  if(odds){cat("Odds:", round(value/(all-value), 2))}
+  if(prob){cat("\nProbability:", round(value/all,2))}
+}
+
+########################## spremeni vrednosti v verjetnost in matriko
+# ni uredu, treba je popravt - for loop ne vzame argumentov
+# celotna verjetnost se izrauna po vrstah
+
+moja.verjetnost3 <- function(value=NULL, all=NULL, data=NULL, row=NULL, prob=TRUE, odds=TRUE, matrix = FALSE){
+  odds <- odds
+  prob <- prob
+  if(matrix==FALSE){
+    if(is.null(data)==FALSE){
+      value <- data[row, value]
+      if(is.null(all)){all<-sum(data[row,])}
+      else all <- data[row,all]}
+    if(odds){value/(all-value)}
+    if(prob){value/all}
+    }
+  else if (matrix==TRUE){
+    mat <- matrix(nrow = nrow(data), ncol = ncol(data))
+    for (i in 1:nrow(data)) {
+      for (ii in 1:ncol(data)) {
+        mat[i,ii]<-moja.verjetnost3(value=ii, data = data, odds = odds, prob = prob, row=i, matrix=FALSE)}}
+    print(mat)
+    return(mat)}
+}
