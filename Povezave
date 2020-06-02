@@ -41,3 +41,34 @@ povezava <- function(x,y, legend=TRUE, plot=TRUE, test=TRUE, data=NULL){
       abline(lm(x ~ y), col = "Red", lty = 5, lwd = 3) 
       abline(h=median(x), v=median(y), col="green", lwd=1)
       if (legend){legend("bottomleft", bg="white", legend = c("linearna regresija", "mediani"), col = c("red", "green"), lty = c(5,1), cex = 0.7)}}}}
+
+###### POVEZAVE - p-vrednosti in korelacije celega DATAFRAMA glede na odvisno spremenljivko
+
+povezava.frame <- function(sprem, data){
+  # vzame odvisno spremenljivko in dataframe
+  # vrne dataframe z p-vrednostmi in korelacijskimi koeficienti med odvisno in vsemi ostalimi v dataframu
+  rezultati <- data.frame(ime = names(data),
+                          p.value = vector(mode = "numeric", length = ncol(data)),
+                          cor = vector(mode = "numeric", length = ncol(data)))
+  rezultati[rezultati==0] <- NA
+  podatki <- data
+  x <- data[,deparse(substitute(sprem))]
+  for (i in c(2:20)) {
+    y <- podatki[,i]
+    if (is.factor(x) & is.factor(y)){                      
+      rezultati$p.value[i] <- round(chisq.test(x,y)$p.value, 5)}                   
+    else if (is.factor(x) & is.numeric(y) | is.factor(y) & is.numeric(x)){ 
+      if (nlevels(x)==2 | nlevels(y)==2){
+        if (is.factor(x)){
+          rezultati$p.value[i] <- round(t.test(y ~ x)$p.value, 5)}
+        else if (is.factor(y)){
+          rezultati$p.value[i] <- round(t.test(x ~ y)$p.value, 5)
+        }}
+      else if (nlevels(x)>2 | nlevels(y)>2){
+        rezultati$p.value[i] <- round(summary(aov(x~y))[[1]][["Pr(>F)"]][1], 5)}}
+    else if (is.numeric(c(x,y))){                                      
+      rezultati$p.value[i] <- round(cor.test(x, y, method = "pearson")$p.value, 5)
+      rezultati$cor[i] <- round(as.numeric(cor.test(x, y, method = "pearson")$estimate),5)}}
+  print(rezultati)
+  return(rezultati)
+}
