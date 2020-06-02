@@ -53,7 +53,7 @@ povezava.frame <- function(sprem, data){
   rezultati[rezultati==0] <- NA
   podatki <- data
   x <- data[,deparse(substitute(sprem))]
-  for (i in c(2:20)) {
+  for (i in c(1:ncol(podatki))) {
     y <- podatki[,i]
     if (is.factor(x) & is.factor(y)){                      
       rezultati$p.value[i] <- round(chisq.test(x,y)$p.value, 5)}                   
@@ -69,6 +69,5 @@ povezava.frame <- function(sprem, data){
     else if (is.numeric(c(x,y))){                                      
       rezultati$p.value[i] <- round(cor.test(x, y, method = "pearson")$p.value, 5)
       rezultati$cor[i] <- round(as.numeric(cor.test(x, y, method = "pearson")$estimate),5)}}
-  print(rezultati)
   return(rezultati)
 }
