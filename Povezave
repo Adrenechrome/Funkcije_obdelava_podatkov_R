@@ -1,5 +1,12 @@
 # Funkcije za preverjanje korelacij med spremenljivkami
 
+# Bivariatni testi:
+# Dve nominalni: Chi2
+# Kategorična in ordinalna: Chi2
+# Dve ordinalni: Spearman's rank correlation rho
+# Intervalna in binarna nominalna: t-test
+# Dve intervalni: Pearson's product-moment correlation
+
 ############ GGplot
 # library(GGally)
 # library(GGplot2)
