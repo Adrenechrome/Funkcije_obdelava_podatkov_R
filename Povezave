@@ -71,3 +71,4 @@ povezava.frame <- function(sprem, data){
       rezultati$cor[i] <- round(as.numeric(cor.test(x, y, method = "pearson")$estimate),5)}}
   return(rezultati)
 }
+
