@@ -1,0 +1,36 @@
+# Funkcije za preverjanje korelacij med spremenljivkami
+
+############ GGplot
+# library(GGally)
+# library(GGplot2)
+
+ggpairs()
+
+############ MOJA POVEZAVA
+
+povezava <- function(x,y, legend=TRUE, plot=TRUE, test=TRUE, data=NULL){
+  #preveri povezave
+  x.name<-deparse(substitute(x)); y.name<-deparse(substitute(y))
+  if (is.null(data)==FALSE){                                         
+    x<-data[,deparse(substitute(x))]; y<-data[,deparse(substitute(y))]}
+  if (is.factor(x) & is.factor(y)){                      
+    if(test==TRUE){print(chisq.test(x,y))}                    
+    if(plot==TRUE){plot(x~y, xlab = y.name, ylab = x.name)}}
+  else if (is.factor(x) & is.numeric(y) | is.factor(y) & is.numeric(x)){ 
+    if (nlevels(x)==2 | nlevels(y)==2){           
+      if(test){print(t.test(x~y, var.equal=T))}
+      if(plot){boxplot(x~y, xlab = y.name, ylab = x.name)}}
+    else if (nlevels(x)>2 | nlevels(y)>2){
+      if(test){print(leveneTest(x ~ y))
+        require(car)
+        if (leveneTest(x ~ y)$`Pr(>F)`[1]<0.05){warning('Homogenost varianc je krsena (p<0.05)', call. = FALSE)}
+        AN <- aov(x ~ y)
+        cat("\nANOVA:\n")
+        print(summary(AN))}
+      if(plot){boxplot(x ~ y, ylab = x.name)}}}
+  else if (is.numeric(c(x,y))){                                      
+    if(test){print(cor.test(x, y, method = "pearson"))}
+    if(plot){plot(x ~ y, xlab = y.name, ylab = x.name) 
+      abline(lm(x ~ y), col = "Red", lty = 5, lwd = 3) 
+      abline(h=median(x), v=median(y), col="green", lwd=1)
+      if (legend){legend("bottomleft", bg="white", legend = c("linearna regresija", "mediani"), col = c("red", "green"), lty = c(5,1), cex = 0.7)}}}}
