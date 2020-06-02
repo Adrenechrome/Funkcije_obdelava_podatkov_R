@@ -42,7 +42,7 @@ povezava <- function(x,y, legend=TRUE, plot=TRUE, test=TRUE, data=NULL){
       abline(h=median(x), v=median(y), col="green", lwd=1)
       if (legend){legend("bottomleft", bg="white", legend = c("linearna regresija", "mediani"), col = c("red", "green"), lty = c(5,1), cex = 0.7)}}}}
 
-###### POVEZAVE - p-vrednosti in korelacije celega DATAFRAMA glede na odvisno spremenljivko
+###### POVEZAVE NA DATAFRAMU - p-vrednosti in korelacije celega dataframa glede na odvisno spremenljivko
 
 povezava.frame <- function(sprem, data){
   # vzame odvisno spremenljivko in dataframe
