@@ -12,7 +12,7 @@ moja.TT <- function(data, size=0.75){
   test <- data.frame(data[-trening.ID, ])
   return(list(trening=trening, test=test))}
 
-############## Razdelitev z enakim številom responsa v trening vzorcu
+############## Razdelitev z enakim številom responsa v trening vzorcu (za binarne sprem.)
 
 moja.TT.enak <- function(data, var){
   # Vrne list z dvema dataframoma - trening in test. Trening vsebuje enako število obeh levelov var
