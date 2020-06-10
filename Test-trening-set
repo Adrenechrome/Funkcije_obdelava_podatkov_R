@@ -1,6 +1,46 @@
-############################# FUNKCIJE ZA IZDELAVO TEST IN TRENIN VZORCEV
+############################# FUNKCIJE ZA IZDELAVO TEST IN TRENING VZORCEV
 
-############## Navadna razdelitev
+############## Cela funkcija #############
+
+  # Vrne list z dvema dataframoma - test in trening. Ce je enak=TRUE je v trening vzorcu enako stevilo enot levelov odvisne spremenljivke (var)
+  # Vzame: 
+    # - data: dataframe 
+    # - size: odstotek velikosti (med 0 in 1) trening vzorca (opcijsko, ) 
+    # - enak: (opcijsko, vkljuci enako stevilo enot v levelih odvisne spremenljivke) 
+    # - var: (obvezno, ce je enak=TRUE, zapisana mora biti v narekovajih)
+    
+moja.TT <- function(data, size=0.75, enak=FALSE, var=NULL){
+  # Vrne list z dvema dataframoma - test in trening. Ce je enak=TRUE je v trening vzorcu enako stevilo enot levelov odvisne spremenljivke (var)
+  set.seed(123)
+  if(enak==FALSE){
+    velikost.vzorca <- floor(size * nrow(data))
+    trening.ID <- sample(seq_len(nrow(dat)), size = velikost.vzorca)
+    trening <- data.frame(data[trening.ID, ])
+    test <- data.frame(data[-trening.ID, ])
+  }
+  else {
+    if(is.null(var)){stop("var mora biti podana")}
+    spremenljivka <- as.factor(data[,var])
+    st.levelov <- nlevels(spremenljivka)
+    leveli <- list()
+    rows <- list()
+    parts.trening <- list()
+    parts.test <- list()
+    for (i in 1:st.levelov) {
+      leveli[i] <- list(dat[which(spremenljivka==levels(spremenljivka)[i]),])
+      rows[i] <- list(sample(1:nrow(leveli[[i]]), size*floor(min(table(spremenljivka)))))
+    }
+    
+    for (i in 1:st.levelov) {
+      parts.trening[i] <- list(leveli[[i]][rows[[i]],])
+      parts.test[i] <- list(leveli[[i]][-rows[[i]],])
+    }
+    trening <- do.call(rbind, parts.trening)
+    test <- do.call(rbind, parts.test)
+  }
+  return(list(trening=trening, test=test))}
+
+############## Navadna razdelitev ####################
 
 moja.TT <- function(data, size=0.75){
   # Vrne list z dvema dataframoma - test in trening
@@ -12,7 +52,7 @@ moja.TT <- function(data, size=0.75){
   test <- data.frame(data[-trening.ID, ])
   return(list(trening=trening, test=test))}
 
-############## Razdelitev z enakim številom responsa v trening vzorcu (za binarne sprem.)
+############## Razdelitev z enakim številom responsa v trening vzorcu (za binarne sprem.) ####################
 
 moja.TT.enak <- function(data, var){
   # Vrne list z dvema dataframoma - trening in test. Trening vsebuje enako število obeh levelov var
