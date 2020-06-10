@@ -1,0 +1,32 @@
+############################# FUNKCIJE ZA IZDELAVO TEST IN TRENIN VZORCEV
+
+############## Navadna razdelitev
+
+moja.TT <- function(data, size=0.75){
+  # Vrne list z dvema dataframoma - test in trening
+  # Vzame dataframe in odstotek velikosti (med 0 in 1) trening vzorca
+  velikost.vzorca <- floor(size * nrow(data))
+  set.seed(123)
+  trening.ID <- sample(seq_len(nrow(dat)), size = velikost.vzorca)
+  trening <- data.frame(data[trening.ID, ])
+  test <- data.frame(data[-trening.ID, ])
+  return(list(trening=trening, test=test))}
+
+############## Razdelitev z enakim številom responsa v trening vzorcu
+
+moja.TT.enak <- function(data, var){
+  # Vrne list z dvema dataframoma - trening in test. Trening vsebuje enako število obeh levelov var
+  # Vzame dataframe (data) in binarno faktorsko spremenljivko (var)
+  if (table(data[,var])[1]<table(data[,var])[2]){
+    level1 <- data[which(data[,var]==levels(data[,var])[1]),]
+    level2 <- data[which(data[,var]==levels(data[,var])[2]),]}
+  else {
+    level1 <- data[which(data[,var]==levels(data[,var])[2]),]
+    level2 <- data[which(data[,var]==levels(data[,var])[1]),]
+  }
+  rows1 <- sample(1:nrow(level1), 0.7*nrow(level1))
+  rows2 <- sample(1:nrow(level2), 0.7*nrow(level1))
+  trening <- rbind(level1[rows1,], level2[rows2,])
+  test <- rbind(level1[-rows1,], level2[-rows2,])
+  return(list(trening=trening,test=test))
+}
