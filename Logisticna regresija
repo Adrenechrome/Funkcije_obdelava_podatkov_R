@@ -1,0 +1,41 @@
+############################################# Funkcije za logisticno regresijo ########################################
+
+############# LOG - izpis verjetnosti in plot multivariatnega modela ####
+
+moja.log.probs <- function(data, model, var){
+  # vrne list z urejenimi verjetnostmi po logisticnem modelu in dejanskimi vrednostmi ter podatke za ggplot
+  require(ggplot2)
+  verjetnosti <- predict(model, data, type="response")
+  podatki <- data.frame(verjetnosti=verjetnosti, dejanske=data[,var])
+  podatki <- podatki[order(podatki$verjetnosti, decreasing=FALSE),]
+  podatki$rank <- seq(1:nrow(podatki))
+  plot <- ggplot(podatki, aes(rank, verjetnosti, color=dejanske)) + 
+    geom_point(size=1.5) + 
+    xlab("Rank") + 
+    ylab("Verjetnost") + ggtitle("Logisticni model")
+  return(list(podatki=podatki, plot=plot))
+}
+
+############# LOG - PREVERJANJE CUTOFFOV ####
+
+moja.cutoffs.log <- function(data, model, var, min=0.1, max=0.9, by=0.05, group=NULL){
+  # Vrne list s podatki o tocnosti predvidevanja na razlicnih cutoffih za binarno logisticno reg. njihov plot
+  require(caret)
+  cutoffs <- seq(min,max,by=by)
+  predictions <- predict(model, data, type="response")
+  lev1 <- levels(data[,var])[1]
+  lev2 <- levels(data[,var])[2]
+  accuracy <- 1:length(cutoffs)
+  for (i in 1:length(cutoffs)) {
+    rezultati <- factor(ifelse(predictions<=cutoffs[i], lev1, lev2))
+    accuracy[i] <- confusionMatrix(rezultati, data[,var])$overall["Accuracy"]
+  }
+  rezultati.koncni <- data.frame(cutoffs=cutoffs, accuracy = accuracy)
+  if(is.null(group)==FALSE){rezultati.koncni$group<-group}
+  plot <- ggplot(rezultati.koncni, aes(cutoffs, accuracy)) + 
+    geom_line(size=1.2) + 
+    geom_point(size=1.5) + 
+    xlab("Cutoffs") + 
+    ylab("Accuracy") + ggtitle("Cutoff accuracy")
+  return(list(rezultati=rezultati.koncni, plot=plot))
+}
