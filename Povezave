@@ -65,7 +65,7 @@ povezava.frame <- function(sprem, data){
           rezultati$p.value[i] <- round(t.test(x ~ y)$p.value, 5)
         }}
       else if (nlevels(x)>2 | nlevels(y)>2){
-        rezultati$p.value[i] <- round(summary(aov(x~y))[[1]][["Pr(>F)"]][1], 5)}}
+        rezultati$p.value[i] <- round(summary(aov(y~x))[[1]][["Pr(>F)"]][1], 5)}}
     else if (is.numeric(c(x,y))){                                      
       rezultati$p.value[i] <- round(cor.test(x, y, method = "pearson")$p.value, 5)
       rezultati$cor[i] <- round(as.numeric(cor.test(x, y, method = "pearson")$estimate),5)}}
